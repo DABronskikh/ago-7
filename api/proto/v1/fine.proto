@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package pkg.grpc.fine.v1; // пакет - для операций import'а
+option go_package = "github.com/DABronskikh/ago-6/pkg/fine/v1"; // полный путь пакета для go
+
+import "google/protobuf/timestamp.proto"; // импортируем из другого proto (includes -> third_party)
+
+service AggregatorService {
+  rpc SearchFlights (SearchData) returns (stream FlightResponse); //поиск рейсов
+}
+
+message SearchData {
+  google.protobuf.Timestamp timeDeparture = 1; //время вылета
+  int64 fromIATA = 2; //IATA-код* аэропорта вылета
+  int64 toIATA = 3; //IATA-код* аэропорта прилёта
+}
+
+message FlightResponse {
+  repeated Flight items = 1;
+}
+
+message Flight {
+  int64 id = 1; //id
+  int64 cost = 2; //стоимость
+  google.protobuf.Timestamp timeDeparture = 3; //время вылета
+  google.protobuf.Timestamp timeTravel = 4; //время прилета
+  int64 fromIATA = 5; //IATA-код* аэропорта вылета
+  int64 toIATA = 6; //IATA-код* аэропорта прилёта
+}
